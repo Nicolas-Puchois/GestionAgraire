@@ -1,7 +1,6 @@
 ﻿using Agriculture.Classes;
 using MySql.Data.MySqlClient;
 
-
 void TestConnectionBdd(string userName, string password)
 {
     Console.Clear();
@@ -55,8 +54,24 @@ void ConnectionDataBase(string userName, string password)
     }
 }
     
-    
-    
+void test()
+{
+   /* string connStr = $"server=localhost;user=root;database=agriculture;port=3306;password=";
+    MySqlConnection conn = new MySqlConnection(connStr);*/
+
+    try
+    {
+        string commandeSelect = "SELECT * FROM Parcelle";
+        MySqlScript newScript = new MySqlScript(commandeSelect);
+        
+        Console.WriteLine(newScript);
+    }
+    catch
+    {
+
+    }
+}    
+
 void ChoixTable()
 {
     bool appWorking = false;
@@ -107,12 +122,17 @@ void ChoixAction()
         case "0":
             break;
         case "1":
+            test();
             break;
         case "2":
             break;
         case "3":
             Console.Clear();
             TestConnectionBdd(ConnectDatabaseUsername(), ConnectDatabasePassword());
+            break;
+        default:
+            Console.WriteLine("Erreur, veuillez réessayer");
+            ChoixAction();
             break;
     }
 }
@@ -145,4 +165,3 @@ string ConnectDatabasePassword()
 }
 
 ConnectionDataBase(ConnectDatabaseUsername(), ConnectDatabasePassword());
-//ChoixAction();
