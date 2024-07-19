@@ -1,6 +1,7 @@
 ﻿using Agriculture.Classes;
 using MySql.Data.MySqlClient;
 
+
 void TestConnectionBdd(string userName, string password)
 {
     Console.Clear();
@@ -9,7 +10,7 @@ void TestConnectionBdd(string userName, string password)
     MySqlConnection conn = new MySqlConnection(connStr);
     try
     {
-        
+
         Console.WriteLine("Connecting to MySQL...");
         conn.Open();
         Console.ForegroundColor = ConsoleColor.Green;
@@ -25,7 +26,7 @@ void TestConnectionBdd(string userName, string password)
         conn.Close();
         Console.WriteLine("Fin test de connection ");
     }
-    ChoixAction();
+    Affichage();
 }
 
 void ConnectionDataBase(string userName, string password)
@@ -40,7 +41,7 @@ void ConnectionDataBase(string userName, string password)
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Connection reussi \n");
         Console.ForegroundColor = ConsoleColor.White;
-        ChoixAction();
+        Affichage();
 
     }
     catch (Exception)
@@ -53,35 +54,18 @@ void ConnectionDataBase(string userName, string password)
         ConnectionDataBase(ConnectDatabaseUsername(), ConnectDatabasePassword());
     }
 }
-    
-void test()
-{
-   /* string connStr = $"server=localhost;user=root;database=agriculture;port=3306;password=";
-    MySqlConnection conn = new MySqlConnection(connStr);*/
 
-    try
-    {
-        string commandeSelect = "SELECT * FROM Parcelle";
-        MySqlScript newScript = new MySqlScript(commandeSelect);
-        
-        Console.WriteLine(newScript);
-    }
-    catch
-    {
-
-    }
-}    
-
-void ChoixTable()
+void Affichage()
 {
     bool appWorking = false;
+    string table;
     Menu.MenuSelect(ChoixMenu());
     while (!appWorking)
     {
         Menu.MenuSelect("main");
         switch (Console.ReadLine())
         {
-            case "1":
+            case "1":    
                 break;
             case "2":
                 break;
@@ -92,6 +76,8 @@ void ChoixTable()
             case "5":
                 break;
             case "6":
+                Parcelle.Selection();
+                Affichage();
                 break;
             case "7":
                 break;
@@ -99,41 +85,34 @@ void ChoixTable()
                 break;
             case "9":
                 break;
-            case "exit":
+            case "10":
+                break;
+            case "11":
+                break;
+            case "12":
+                break;
+            case "13":
+                break;
+            case "14":
+                break;
+            case "15":
+                break;
+            case "16":
+                break;
+            case "17":
+                break;
+            case "18":
+                break;
+            case "19":
+                TestConnectionBdd(ConnectDatabaseUsername(), ConnectDatabasePassword());
+                break;
+            case "0":
                 Environment.Exit(0);
                 break;
             default:
                 Console.WriteLine("Error:Command not supported or incorect");
                 break;
         }
-    }
-}
-
-void ChoixAction()
-{
-    Console.WriteLine("Que Voulez-vous faire : ");
-    Console.WriteLine(" 1 -- Afficher une entrée : ");
-    Console.WriteLine(" 2 -- Créer une entrée : ");
-    Console.WriteLine(" 3 -- Tester la connexion à la base de donnée : ");
-    Console.WriteLine(" 0 -- Sortir : ");
-
-    switch (ChoixMenu())
-    {
-        case "0":
-            break;
-        case "1":
-            test();
-            break;
-        case "2":
-            break;
-        case "3":
-            Console.Clear();
-            TestConnectionBdd(ConnectDatabaseUsername(), ConnectDatabasePassword());
-            break;
-        default:
-            Console.WriteLine("Erreur, veuillez réessayer");
-            ChoixAction();
-            break;
     }
 }
 
