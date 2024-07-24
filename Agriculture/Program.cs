@@ -43,9 +43,16 @@ static void RequestHandler(HttpListenerContext context)
 
     List<Production> listeTouteLesProductions = Production.SelectionDeToutlesProduits();
 
-    string jsonResponse = JsonSerializer.Serialize(listeTouteLesProductions);
+    
 
+    object ensembleDesRequete = new
+    {
+        listeTouteLesProductions,
+        listeQuantiteTotalEpanduDansUneParcelle,
+        listeEngraisDansUneDateSpecifique
+    };
 
+    string jsonResponse = JsonSerializer.Serialize(ensembleDesRequete);
     //Creer la réponse
     byte[] responseBytes = Encoding.UTF8.GetBytes(jsonResponse);
     context.Response.ContentType = "application/json";
