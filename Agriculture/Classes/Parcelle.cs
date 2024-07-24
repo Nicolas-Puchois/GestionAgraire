@@ -9,49 +9,65 @@ namespace Agriculture.Classes
 {
     internal class Parcelle
     {
-        private int _noParcelle;
-        private float _surface;
-        private string _nomParcelle;
-        private string _coordonees;
+        private  int _noParcelle;
+        private  float _surface;
+        private  string _nomParcelle;
+        private  string _coordonees;
 
 
-        public int NoParcelle { get => _noParcelle; set => _noParcelle = value; }
-        public float Surface { get => _surface; set => _surface = value; }
-        public string NomParcelle { get => _nomParcelle; set => _nomParcelle = value; }
-        public string Coordonees { get => _coordonees; set => _coordonees = value; }
+        public  int NoParcelle { get => _noParcelle; set => _noParcelle = value; }
+        public  float Surface { get => _surface; set => _surface = value; }
+        public  string NomParcelle { get => _nomParcelle; set => _nomParcelle = value; }
+        public  string Coordonees { get => _coordonees; set => _coordonees = value; }
 
-        public Parcelle(int noParcelle, float surface, string nomParcelle, string coordonees)
+
+        public static List<Parcelle> Selection()
         {
-            NoParcelle = noParcelle;
-            Surface = surface;
-            NomParcelle = nomParcelle;
-            Coordonees = coordonees;
-        }
-
-
-        public static void Selection()
-        {
-            string connStr = $"server=localhost;user=root;database=agriculture;port=3306;password=";
-            MySqlConnection conn = new MySqlConnection(connStr);
-            conn.Open();
-
-            MySqlCommand commandeSelect = new MySqlCommand("SELECT * FROM Parcelle", conn);
+            // récuperer plusieurs Parcelle
+            List<Parcelle> list = new List<Parcelle>();
+            basededonee basededonee = basededonee.GetDatabase();
+            basededonee.Connection.Open();
+            MySqlCommand commandeSelect = new MySqlCommand("SELECT * FROM Parcelle",basededonee.Connection);
+            
             MySqlDataReader reader = commandeSelect.ExecuteReader();
-
-            if (reader.HasRows)
+            while (reader.Read())
             {
-                while (reader.Read())
+                list.Add(
+                new Parcelle
                 {
-                    Console.WriteLine("{0}\t{1}\t{2}\t", reader[0],
-                        reader[1], reader[2]);
-                }
-            }
-            else
-            {
-                Console.WriteLine("Aucune colonne trouvé");
+                    NoParcelle = reader.GetInt32("no_parcelle"),
+                    NomParcelle = reader.GetString("nom_parcelle"),
+                });
             }
             reader.Close();
+            basededonee.Connection.Close();
+            return list;
+        }
 
+        public static List<Parcelle> SelectionAvecId()
+        {
+            // récuperer plusieurs Parcelle
+            List<Parcelle> list = new List<Parcelle>();
+            basededonee basededonee = basededonee.GetDatabase();
+            basededonee.Connection.Open();
+            int no_parcelle = 2;
+            MySqlCommand commandeSelectId = new MySqlCommand("SELECT * FROM Parcelle WHERE no_parcelle = 1", basededonee.Connection);
+            commandeSelectId.Parameters.AddWithValue("@no_parcelle", no_parcelle);
+            MySqlDataReader readerSelectId = commandeSelectId.ExecuteReader();
+            while (readerSelectId.Read())
+            {
+                list.Add(
+                new Parcelle
+                {
+                    NoParcelle = readerSelectId.GetInt32("no_parcelle"),
+                    NomParcelle = readerSelectId.GetString("nom_parcelle"),
+                    Surface = readerSelectId.GetFloat("surface"),
+                    Coordonees = readerSelectId.GetString("coordonees")
+                });
+            }
+            readerSelectId.Close();
+            basededonee.Connection.Close();
+            return list;
         }
     }
 }

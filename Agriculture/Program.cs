@@ -1,7 +1,51 @@
 ﻿using Agriculture.Classes;
 using MySql.Data.MySqlClient;
+using System.Net;
+using System.Text;
+using System.Text.Json;
 
 
+//HttpListener = Classe .NET permettant de communiquer via les protocoles HTTP
+HttpListener listener = new HttpListener();
+listener.Prefixes.Add("http://localhost:8080/");
+listener.Start();
+
+
+Console.WriteLine("Service web démarré sur http://localhost:8080");
+
+
+MySqlCommand command = new MySqlCommand();
+//Attendre les requêtes
+while (true)
+{
+    
+    HttpListenerContext context = listener.GetContext();
+    //On prend la file d'attente de toutes les requêtes, pour chaque requête on applique la fonction RequestHandler
+    ThreadPool.QueueUserWorkItem(o => RequestHandler(context));
+}
+
+static void RequestHandler(HttpListenerContext context)
+{
+    HttpListenerRequest request = context.Request;
+    Console.WriteLine($"Requête reçue : {request.Url}");
+
+    //Creer un objet à convertir en JSON
+    List<Parcelle> listeDeParcelle = Parcelle.SelectionAvecId();
+
+    string jsonResponse = JsonSerializer.Serialize(listeDeParcelle);
+
+    //Creer la réponse
+    byte[] responseBytes = Encoding.UTF8.GetBytes(jsonResponse);
+    context.Response.ContentType = "application/json";
+    context.Response.OutputStream.Write(responseBytes, 0, responseBytes.Length);
+    context.Response.OutputStream.Close();
+}
+
+//Recuperer et gerer une requete
+
+
+
+/*
 void TestConnectionBdd(string userName, string password)
 {
     Console.Clear();
@@ -144,3 +188,4 @@ string ConnectDatabasePassword()
 }
 
 ConnectionDataBase(ConnectDatabaseUsername(), ConnectDatabasePassword());
+*/
