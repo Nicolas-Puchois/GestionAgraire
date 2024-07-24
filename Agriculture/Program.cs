@@ -30,9 +30,21 @@ static void RequestHandler(HttpListenerContext context)
     Console.WriteLine($"Requête reçue : {request.Url}");
 
     //Creer un objet à convertir en JSON
-    List<Parcelle> listeDeParcelle = Parcelle.SelectionAvecId();
+    List<Parcelle> listeDeParcelle = Parcelle.Selection();
+    List<Parcelle> listeDeParcelleAvecId = Parcelle.SelectionAvecId();
 
-    string jsonResponse = JsonSerializer.Serialize(listeDeParcelle);
+    List<Culture> listeDeCulture = Culture.SelectionAll();
+    List<Culture> listeUneCulture = Culture.SelectionUneCulture();
+    List<Culture> listeCultureSupUn = Culture.SelectionCultureQuantiteSupUn();
+
+    List<Engrais> listeEngraisDansUneDateSpecifique = Engrais.SelectionEngraisDansUneDateSpecifique();
+
+    List<Epandre> listeQuantiteTotalEpanduDansUneParcelle = Epandre.SelectionQuantiteTotalEpanduDansUneParcelle();
+
+    List<Production> listeTouteLesProductions = Production.SelectionDeToutlesProduits();
+
+    string jsonResponse = JsonSerializer.Serialize(listeTouteLesProductions);
+
 
     //Creer la réponse
     byte[] responseBytes = Encoding.UTF8.GetBytes(jsonResponse);
